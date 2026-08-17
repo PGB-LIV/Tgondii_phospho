@@ -1,0 +1,9 @@
+# ignore files
+.Rhistory
+inputs/
+outputs/
+archive/
+data/
+manuscript/
+*.RProj
+.Rproj.user/
