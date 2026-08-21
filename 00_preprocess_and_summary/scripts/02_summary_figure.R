@@ -63,7 +63,8 @@ peptido<-ggplot2::ggplot(peptidoform_overall, aes(fill=Count, y=as.numeric(sum),
     plot.background = element_rect(fill='transparent', color=NA),
     panel.grid.major = element_blank(),
     panel.grid.minor = element_blank())+xlab("Data set")+ylab("Count")+theme(text = element_text(size=18))+
-  scale_y_continuous(labels=scales::comma)
+  scale_y_continuous(labels=scales::comma,breaks = seq(0, 30000, by = 5000))+
+  geom_text(aes(label = sum), size = 4, vjust = -0.4, position = position_dodge(0.9))
 
 #https://tidytales.ca/snippets/2022-12-22_patchwork-shared-axis-labels/#shared-y-axis-labels
 #https://www.data-imaginist.com/posts/2024-01-05-patchwork-1-2-0/

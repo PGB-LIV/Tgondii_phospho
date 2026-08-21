@@ -15,12 +15,12 @@ library(UpSetR)
 library(dplyr)
 
 # rmotifx background - 15mers from peptides in FDR_output
-background <- read.csv(file ="01_motif_analysis/inputs/motif_ST_background.txt", header = FALSE)
+background <- read.csv(file ="02_motif_analysis/inputs/motif_ST_background.txt", header = FALSE)
 bg.seqs <- as.character(background$V1)
-write.table(bg.seqs, file = paste0("01_motif_analysis/outputs/background_seq.txt"), quote = FALSE, row.names = FALSE, col.names = FALSE)
+write.table(bg.seqs, file = paste0("02_motif_analysis/outputs/background_seq.txt"), quote = FALSE, row.names = FALSE, col.names = FALSE)
 
 # Gold (motif and enrichment analysis) and GSB (motif only)
-file_list<-c("01_motif_analysis/inputs/gold_motif_seqs.txt", "01_motif_analysis/inputs/gsb_motif_seqs.txt")
+file_list<-c("02_motif_analysis/inputs/gold_motif_seqs.txt", "02_motif_analysis/inputs/gsb_motif_seqs.txt")
 for (f in file_list){
   foreground <- read.csv(file = f, header = FALSE)
   # file name - G vs GSB
@@ -43,7 +43,7 @@ for (f in file_list){
   
   #find enriched motifs - ST
   mot <- motifx(fg.seqs, bg.seqs, central.res = 'ST', min.seqs = 20, pval.cutoff = 1e-6)
-  write.csv(mot, file = paste0("01_motif_analysis/outputs/", flr_file, "/All_motifs_", flr_file, "_ST_01.csv"), row.names = FALSE) 
+  write.csv(mot, file = paste0("02_motif_analysis/outputs/", flr_file, "/All_motifs_", flr_file, "_ST_01.csv"), row.names = FALSE) 
   
   # filter foreground for S 15mers
   foreground_S <- subset(foreground, central == "S")
@@ -54,7 +54,7 @@ for (f in file_list){
   
   #find enriched motifs
   mot_S <- motifx(fg.seqs_S, bg.seqs_S, central.res = 'S', min.seqs = 20, pval.cutoff = 1e-6)
-  write.csv(mot_S, file = paste0("01_motif_analysis/outputs/", flr_file, "/All_motifs_", flr_file, "_S_with_02.csv"), row.names = FALSE) 
+  write.csv(mot_S, file = paste0("02_motif_analysis/outputs/", flr_file, "/All_motifs_", flr_file, "_S_with_02.csv"), row.names = FALSE) 
 
   # filter foreground for T 15mers
   foreground_T <- subset(foreground, central == "T")
@@ -65,7 +65,7 @@ for (f in file_list){
   
   #find enriched motifs
   mot_T <- motifx(fg.seqs_T, bg.seqs_T, central.res = 'T', min.seqs = 20, pval.cutoff = 1e-6)
-  write.csv(mot_T, file = paste0("01_motif_analysis/outputs/", flr_file, "/All_motifs_", flr_file, "_T_03.csv"), row.names = FALSE) 
+  write.csv(mot_T, file = paste0("02_motif_analysis/outputs/", flr_file, "/All_motifs_", flr_file, "_T_03.csv"), row.names = FALSE) 
   
   # skip if no motifs
   if (is.null(mot) || nrow(mot) == 0) next 
@@ -130,7 +130,7 @@ for (f in file_list){
   overall[is.na(overall)] <- 0
   
   # upset plot to show the differences
-  png(paste0("01_motif_analysis/outputs/", flr_file, "/upset_plot_", flr_file, ".png"), width = 16, height=14, units="cm", res=300)
+  png(paste0("02_motif_analysis/outputs/", flr_file, "/upset_plot_", flr_file, ".png"), width = 16, height=14, units="cm", res=300)
   print(upset(overall, text.scale = 1.5))
   dev.off()
 
@@ -210,7 +210,7 @@ for (f in file_list){
     foreground_motif_seq <- foreground_motif$V1
     if (length(foreground_motif_seq) == 0) next
     # csv
-    write.table(foreground_motif_seq, file = paste0("01_motif_analysis/outputs/",flr_file,"/",motif_group, "_15mer_", flr_file, ".txt"), quote = FALSE, row.names = FALSE,col.names = FALSE)
+    write.table(foreground_motif_seq, file = paste0("02_motif_analysis/outputs/",flr_file,"/",motif_group, "_15mer_", flr_file, ".txt"), quote = FALSE, row.names = FALSE,col.names = FALSE)
     
     # seq logo
     # probability (y axis)
@@ -227,9 +227,9 @@ for (f in file_list){
     }
   # create plot for all motif classes
   overall_seq_plot <- ggpubr::ggarrange(plotlist=seq_plots, common.legend = TRUE)
-  ggsave(file = paste0("01_motif_analysis/outputs/", flr_file, "/rmotifx_all_", flr_file, ".png"), overall_seq_plot, height = 10, width = 12, dpi = 330)
+  ggsave(file = paste0("02_motif_analysis/outputs/", flr_file, "/rmotifx_all_", flr_file, ".png"), overall_seq_plot, height = 10, width = 12, dpi = 330)
   overall_seq_plot_bits <- ggpubr::ggarrange(plotlist=seq_plots_bits, common.legend = TRUE)
-  ggsave(file = paste0("01_motif_analysis/outputs/", flr_file, "/rmotifx_all_", flr_file, "_bits.png"), overall_seq_plot_bits, height = 8, width = 12, dpi = 330)
+  ggsave(file = paste0("02_motif_analysis/outputs/", flr_file, "/rmotifx_all_", flr_file, "_bits.png"), overall_seq_plot_bits, height = 8, width = 12, dpi = 330)
   
   ##############################################
   # 6. For each motif, what PTM sites have it? #
@@ -261,6 +261,6 @@ for (f in file_list){
   flr_motif_proteins <- left_join(mot, motif_proteins_df, by = "motif")
   flr_motif_proteins <- flr_motif_proteins %>% select(-c(motif_regex_T:basic_2))
   # output
-  write.csv(flr_motif_proteins, paste("01_motif_analysis/outputs/", flr_file, "/All_motifs_",flr_file,"_with_proteins.csv", sep = ""), row.names = F)
+  write.csv(flr_motif_proteins, paste("02_motif_analysis/outputs/", flr_file, "/All_motifs_",flr_file,"_with_proteins.csv", sep = ""), row.names = F)
   
 }
